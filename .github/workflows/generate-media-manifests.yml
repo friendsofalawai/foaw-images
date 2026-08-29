@@ -1,0 +1,33 @@
+name: Generate Media Manifests
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.json'
+      - '**.md'
+
+permissions:
+  contents: write
+
+jobs:
+  build-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Manifest Generator
+        run: node scripts/generate-manifests.mjs
+
+      - name: Commit and Push Manifest Updates
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update images.json and videos.json manifests [skip ci]"
+          branch: main
