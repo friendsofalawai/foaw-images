@@ -51,6 +51,13 @@ function processDirectory(dirPath) {
 }
 
 function updateJsonFile(filePath, fileList) {
+  // Normalize path relative to project root to check against ignored manifests
+  const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
+
+  if (relativePath === 'slideshow/images.json') {
+    return;
+  }
+
   if (fileList.length > 0) {
     const newContent = JSON.stringify(fileList, null, 2) + '\n';
     let existingContent = '';
